@@ -4,6 +4,10 @@ const app = express();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const CustomError = require("./utilit/customError");
+const connectDB = require("./DB/connectDB");
+
+const userRouter = require("./routes/user");
+const programRouter = require("./routes/Program");
 
 app.use(express.json());
 app.use(
@@ -15,9 +19,10 @@ app.use(
 );
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
+connectDB();
+
+app.use("/api/user", userRouter);
+app.use("/api/programs", programRouter);
 
 app.all("/api/*", (req, res, next) => {
   throw new CustomError(404, "Page Not Found");
